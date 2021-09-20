@@ -14,6 +14,9 @@ import com.example.a160418034_advweek4.viewmodel.ListViewModel
 import kotlinx.android.synthetic.main.fragment_student_detail.*
 import kotlinx.android.synthetic.main.fragment_student_list.*
 import androidx.lifecycle.Observer
+import com.example.a160418034_advweek4.util.loadImage
+import kotlinx.android.synthetic.main.fragment_student_detail.view.*
+import kotlinx.android.synthetic.main.student_list_item.view.*
 
 
 class StudentDetailFragment : Fragment() {
@@ -33,14 +36,20 @@ class StudentDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        var studentId = ""
+        if(arguments != null) {
+            studentId = StudentDetailFragmentArgs.fromBundle(requireArguments()).StudentId
+        }
 
         ViewModel = ViewModelProvider(this).get(DetailViewModel::class.java)
-        ViewModel.fetch()
+        ViewModel.fetch(studentId)
 
         txtid.setText(ViewModel.studentLD.value?.id)
         txtname.setText(ViewModel.studentLD.value?.name)
         txtBod.setText(ViewModel.studentLD.value?.bod)
         txtPhone.setText(ViewModel.studentLD.value?.phone)
+
+        view.imageView2.loadImage(ViewModel.studentLD.value?.photoUrl, view.progressBar2)
 
         observeViewModel()
     }
@@ -51,6 +60,8 @@ class StudentDetailFragment : Fragment() {
             txtname.setText(it.name)
             txtBod.setText(it.bod)
             txtPhone.setText(it.phone)
+
+            imageView2.loadImage(ViewModel.studentLD.value?.photoUrl, progressBar2)
         })
 
     }
